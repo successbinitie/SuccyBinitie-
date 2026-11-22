@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demo website | Succy Binitie</title>
+<meta name="theme-color" content="#050505">
+<style>
+:root{--bg:#050505;--tx:#eceef2;--mu:#8d95a3;--ln:rgba(255,255,255,.1);--gl:rgba(255,255,255,.04);--ac:#00f0ff;--ac2:#8a2be2;--on:#001316;--cc:#00f0ff}
+[data-theme=light]{--bg:#f5f4f0;--tx:#15171c;--mu:#5d6572;--ln:rgba(0,0,0,.12);--gl:rgba(0,0,0,.035);--ac:#007f8a;--ac2:#6a1fb8;--on:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden}
+body{background:var(--bg);color:var(--tx);font:17px/1.55 "Helvetica Neue",Helvetica,Arial,sans-serif;overflow-x:hidden;transition:background .4s,color .4s;padding-bottom:calc(96px + env(safe-area-inset-bottom,0))}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.bl{position:fixed;z-index:0;border-radius:50%;filter:blur(110px);pointer-events:none;opacity:.2}
+.b1{width:55vmax;height:55vmax;left:-35vmax;top:-28vmax;background:var(--ac2)}
+.b2{width:45vmax;height:45vmax;right:-30vmax;bottom:-24vmax;background:var(--ac);opacity:.11}
+header,main,nav{position:relative;z-index:1}
+.w{max-width:1040px;margin:0 auto;padding:0 22px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+button{font:inherit;color:inherit;cursor:pointer}
+header{position:sticky;top:0;z-index:20;padding-top:env(safe-area-inset-top,0);background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+header .w{display:flex;justify-content:space-between;align-items:center;height:56px;gap:10px}
+.brand{font-weight:700;letter-spacing:-.01em}
+.tools{display:flex;gap:8px}
+.tools button,.tools select{background:var(--gl);border:1px solid var(--ln);border-radius:8px;padding:6px 10px;font-size:.85rem;color:var(--tx)}
+.tools option{color:#000}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0));z-index:30;display:flex;gap:2px;padding:5px;border-radius:999px;background:color-mix(in srgb,var(--bg) 60%,transparent);border:1px solid var(--ln);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 10px 40px rgba(0,0,0,.4);max-width:96vw}
+nav a{text-decoration:none;font-size:.84rem;padding:10px 13px;border-radius:999px;color:var(--mu);transition:background .25s,color .25s}
+nav a[aria-current=page]{background:var(--ac);color:var(--on);font-weight:600}
+#wipe{position:fixed;inset:0;z-index:50;pointer-events:none;background:linear-gradient(135deg,var(--ac2),var(--ac));clip-path:circle(0 at 50% 100%)}
+.pg{display:none;padding-top:30px}
+.pg.on{display:block}
+.pg.on>.w>*{animation:in .8s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms)}
+@keyframes in{from{opacity:0;transform:perspective(900px) translateY(30px) rotateX(10deg)}}
+@media(prefers-reduced-motion:reduce){.pg.on>.w>*{animation:none}}
+h1{font-size:clamp(2.4rem,10.5vw,5.6rem);line-height:1;letter-spacing:-.045em;font-weight:700;max-width:14ch}
+h2{font-size:clamp(1.8rem,6.5vw,3rem);line-height:1.05;letter-spacing:-.035em;font-weight:700;max-width:18ch}
+.ld{margin-top:12px;color:var(--mu);max-width:38em}
+.pg.hero.on{min-height:calc(100svh - 150px);display:flex;flex-direction:column;justify-content:center}
+.hero .w{width:100%}
+.row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{display:inline-block;text-align:center;text-decoration:none;font-weight:600;padding:14px 22px;border-radius:10px;width:100%;border:1px solid var(--ln);background:var(--gl);transition:transform .2s,border-color .2s}
+.btn:hover{border-color:var(--ac2)}
+.btn.s{background:var(--ac);color:var(--on);border-color:var(--ac)}
+@media(min-width:560px){.btn{width:auto}}
+.g{position:relative;background:var(--gl);border:1px solid var(--ln);border-radius:14px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.note{font-size:.85rem;color:var(--mu);margin-top:12px}
+.stats{display:flex;flex-wrap:wrap;gap:26px;margin-top:40px}
+.stats b{display:block;font-size:2.4rem;letter-spacing:-.04em;line-height:1}
+.stats span{color:var(--mu);font-size:.9rem}
+.three{display:grid;gap:12px;margin-top:34px}
+.three div{padding:20px}
+.three h3{font-size:1.1rem;margin-bottom:6px}
+.three p{color:var(--mu);font-size:.95rem}
+@media(min-width:760px){.three{grid-template-columns:repeat(3,1fr)}}
+/* features */
+.srch{margin:26px 0 8px}
+input[type=text]{width:100%;background:var(--gl);border:1px solid var(--ln);border-radius:10px;padding:13px 14px;color:var(--tx);font:inherit}
+details{margin-top:12px;border:1px solid var(--ln);border-radius:14px;background:var(--gl);overflow:hidden}
+summary{list-style:none;cursor:pointer;padding:18px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+summary::-webkit-details-marker{display:none}
+summary strong{display:block;font-size:1.1rem;letter-spacing:-.02em}
+summary small{display:block;color:var(--mu);margin-top:3px;font-size:.9rem}
+summary em{font-style:normal;color:var(--ac);white-space:nowrap;font-size:.88rem}
+details[open] summary{border-bottom:1px solid var(--ln)}
+details ul{list-style:none}
+details li{padding:13px 18px;border-bottom:1px solid rgba(128,128,128,.12);display:grid;gap:2px}
+details li:last-child{border:0}
+li b{font-size:.98rem;font-weight:600}
+li b i{font-style:normal;color:var(--ac);margin-right:8px;font-weight:400;font-size:.85rem}
+li span{color:var(--mu);font-size:.92rem}
+.hide{display:none}
+/* demos */
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:26px 0 14px;padding-bottom:4px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto;background:none;border:1px solid var(--ln);border-radius:999px;padding:8px 16px;font-size:.92rem}
+.tabs button[aria-selected=true]{background:var(--ac);color:var(--on);border-color:var(--ac)}
+.pn{display:none;padding:20px}
+.pn.on{display:block}
+#log{height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.m{max-width:85%;padding:9px 13px;border-radius:12px;font-size:.95rem}
+.m.b{background:var(--gl);border:1px solid var(--ln);align-self:flex-start}
+.m.u{background:var(--ac);color:var(--on);align-self:flex-end}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.chips button,.slot,.day{background:none;border:1px solid var(--ln);border-radius:8px;padding:7px 12px;font-size:.88rem}
+.in{display:flex;gap:8px}
+.in input{flex:1;min-width:0}
+.in button,.go{background:var(--ac);color:var(--on);border:0;border-radius:8px;padding:0 16px;font-weight:600}
+.go{padding:12px 18px;margin-top:14px}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.days,.slots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 16px}
+.sel{background:var(--ac)!important;color:var(--on);border-color:var(--ac)!important}
+.slot[disabled]{opacity:.3;text-decoration:line-through}
+h4{font-size:.95rem}
+#ok{margin-top:14px;color:var(--ac)}
+.ba{position:relative;height:220px;border-radius:12px;overflow:hidden;border:1px solid var(--ln);--p:50%}
+.pp{position:absolute;inset:0;padding:16px;display:flex;flex-direction:column;gap:9px}
+.pp i{display:block;border-radius:3px}
+.old{background:#bdbdb4}.old i{background:#9a9a92;height:10px}.old b{font:700 11px Times,serif;color:#444}
+.new{background:#0b0d12;clip-path:inset(0 calc(100% - var(--p)) 0 0)}.new i{background:#2a3040;height:9px;width:70%}.new b{font-size:1.25rem;letter-spacing:-.03em;color:#fff}
+.new u{display:block;width:110px;height:34px;border-radius:8px;background:var(--ac)}
+.tag{position:absolute;bottom:10px;font-size:.75rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.6);color:#fff}
+input[type=range]{width:100%;margin-top:14px;accent-color:var(--ac)}
+.stage{height:210px;display:grid;place-items:center;perspective:700px}
+.cube{width:var(--sz,110px);height:var(--sz,110px);position:relative;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(var(--ry,30deg));transition:width .3s,height .3s}
+.cube span{position:absolute;inset:0;background:var(--cc);border:1px solid rgba(255,255,255,.35);opacity:.92;transition:background .3s}
+.cube span:nth-child(1){transform:translateZ(calc(var(--sz,110px)/2))}
+.cube span:nth-child(2){transform:rotateY(90deg) translateZ(calc(var(--sz,110px)/2));filter:brightness(.75)}
+.cube span:nth-child(3){transform:rotateY(180deg) translateZ(calc(var(--sz,110px)/2));filter:brightness(.55)}
+.cube span:nth-child(4){transform:rotateY(-90deg) translateZ(calc(var(--sz,110px)/2));filter:brightness(.75)}
+.cube span:nth-child(5){transform:rotateX(90deg) translateZ(calc(var(--sz,110px)/2));filter:brightness(1.2)}
+.cube span:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--sz,110px)/2));filter:brightness(.4)}
+.sw{width:30px;height:30px;border-radius:50%;padding:0!important}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{padding:14px;border:1px solid var(--ln);border-radius:10px}
+.tile b{display:block;font-size:1.8rem;letter-spacing:-.04em}
+.tile small{color:var(--mu)}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin:18px 0 10px}
+.bars i{flex:1;background:linear-gradient(var(--ac),var(--ac2));border-radius:4px 4px 0 0;transition:height .6s}
+@media(min-width:700px){.tiles{grid-template-columns:repeat(4,1fr)}}
+/* uses + plan */
+.uses,.cats{margin-top:28px;display:grid;gap:12px}
+.use{padding:20px}
+.use h3{font-size:1.15rem;letter-spacing:-.02em}
+.use .chips{margin:12px 0 0}
+.use .chips span{border:1px solid var(--ln);border-radius:999px;padding:5px 12px;font-size:.85rem;color:var(--mu)}
+.cat{text-align:left;padding:16px 18px;border-radius:12px;border:1px solid var(--ln);background:var(--gl);transition:border-color .2s}
+.cat strong{display:flex;justify-content:space-between;gap:10px;font-size:1.02rem}
+.cat strong em{font-style:normal;color:var(--mu);font-weight:400;font-size:.88rem;white-space:nowrap}
+.cat span{display:block;margin-top:6px;font-size:.9rem;color:var(--mu)}
+.cat[aria-pressed=true]{border-color:var(--ac);box-shadow:0 0 0 1px var(--ac) inset}
+@media(min-width:700px){.uses,.cats{grid-template-columns:1fr 1fr}}
+@media(min-width:960px){.uses,.cats{grid-template-columns:repeat(3,1fr)}}
+.sum{margin-top:22px;padding:24px;position:sticky;bottom:calc(84px + env(safe-area-inset-bottom,0));z-index:5}
+.sum h3{font-size:1.4rem;letter-spacing:-.03em}
+.meter{display:flex;gap:6px;margin:14px 0}
+.meter i{flex:1;height:6px;border-radius:3px;background:var(--ln);transition:background .3s}
+.meter i.on{background:var(--ac)}
+.sum p{color:var(--mu);font-size:.95rem}
+.sum .btn{margin-top:14px}
+.ft{padding:36px 0 10px;color:var(--mu);font-size:.88rem;text-align:center}
+
+.rib{background:var(--ac);color:var(--on);text-align:center;font-size:.8rem;font-weight:600;padding:5px 12px;line-height:1.3}
+dialog{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:16px;padding:26px;width:min(92vw,420px);margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.72);backdrop-filter:blur(4px)}
+dialog h3{font-size:1.4rem;letter-spacing:-.03em;margin-bottom:8px}
+dialog p{color:var(--mu);margin-bottom:18px}
+.ft a{text-decoration:underline}
+details ul{display:grid;gap:12px;padding:14px}
+details li,details li:last-child{border:1px solid var(--ln);border-radius:12px;padding:12px;background:rgba(128,128,128,.05)}
+@media(min-width:700px){details ul{grid-template-columns:1fr 1fr}}
+@media(min-width:980px){details ul{grid-template-columns:repeat(3,1fr)}}
+.viz{--l:62%;height:96px;border-radius:10px;margin-bottom:10px;color:hsl(var(--h,200) 85% var(--l));background:radial-gradient(circle at 50% 120%,color-mix(in srgb,currentColor 22%,transparent),transparent 70%),rgba(128,128,128,.07);overflow:hidden}
+[data-theme=light] .viz{--l:34%}
+.viz svg{display:block;height:100%;width:100%;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.fl{fill:currentColor;stroke:none}.o5{opacity:.4}
+.pu,.sp,.gr,.dn,.bk,.fa{transform-box:fill-box;transform-origin:center}
+.gr{transform-origin:50% 100%}
+.pu{animation:pu 2s ease-out infinite}@keyframes pu{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.sp{animation:sp 9s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.gr{animation:gr 2.4s ease-in-out infinite alternate}@keyframes gr{from{transform:scaleY(.25)}}
+.bk{animation:bk 1.4s infinite}@keyframes bk{50%{opacity:.15}}
+.fa{animation:fa 2.4s infinite}@keyframes fa{0%,20%{opacity:0}50%,100%{opacity:1}}
+.dn{animation:dn 2s ease-in infinite}@keyframes dn{0%{transform:translateY(-26px);opacity:0}30%{opacity:1}100%{transform:translateY(20px);opacity:1}}
+.dsh{stroke-dasharray:6 6;animation:dsh 1s linear infinite}@keyframes dsh{to{stroke-dashoffset:-12}}
+.sl{animation:sl 2.6s ease-in-out infinite alternate}@keyframes sl{to{transform:translateX(var(--sx,40px))}}
+.sw{animation:sw 1.6s ease-in-out infinite alternate}@keyframes sw{from{transform:rotate(-28deg)}to{transform:rotate(28deg)}}
+.d2{animation-delay:.3s}.d3{animation-delay:.6s}
+@media(prefers-reduced-motion:reduce){.viz *{animation:none!important}}
+
+#tour{position:fixed;inset:0;z-index:70;pointer-events:none}
+#tour[hidden]{display:none}
+#tr-ring{position:fixed;box-shadow:0 0 0 9999px rgba(0,0,0,.62),0 0 0 3px var(--ac),0 0 26px var(--ac);transition:left .5s cubic-bezier(.7,0,.3,1),top .5s cubic-bezier(.7,0,.3,1),width .5s,height .5s,border-radius .5s}
+#tr-arr{position:fixed;fill:var(--ac);stroke:#000;stroke-width:3;stroke-linejoin:round;filter:drop-shadow(0 0 10px var(--ac));animation:bob .8s ease-in-out infinite alternate;--by:10px;transition:left .5s cubic-bezier(.7,0,.3,1),top .5s cubic-bezier(.7,0,.3,1)}
+#tr-arr.up{transform:rotate(180deg);--by:-10px}
+@keyframes bob{to{translate:0 var(--by)}}
+#tr-bub{position:fixed;width:min(88vw,300px);background:var(--bg);color:var(--tx);border:1px solid var(--ac);border-radius:14px;padding:14px 16px;pointer-events:auto;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#tr-bub p{font-size:.98rem;margin-bottom:12px}
+.trb{display:flex;align-items:center;gap:8px}
+#tr-n{flex:1;color:var(--mu);font-size:.82rem}
+.trb button{border:1px solid var(--ln);background:var(--gl);border-radius:8px;padding:9px 14px;font-weight:600}
+.trb .s{background:var(--ac);color:var(--on);border-color:var(--ac)}
+@media(prefers-reduced-motion:reduce){#tr-arr{animation:none}}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="bl b1"></div><div class="bl b2"></div>
+<div id="wipe"></div>
+<header><div class="rib">Demo website. Everything here is sample content. Designed by Succy Binitie.</div><div class="w">
+  <span class="brand">Your Business Name</span>
+  <div class="tools">
+    <select id="lang" aria-label="Language"><option value="en">EN</option><option value="fr">FR</option><option value="es">ES</option></select>
+    <button id="th" aria-label="Switch dark or light mode">Light</button>
+  </div>
+</div></header>
+
+<main>
+<section class="pg hero" id="pg-home"><div class="w">
+  <h1 id="h">A website that works as hard as your business does.</h1>
+  <p class="ld" id="s" style="font-size:1.12rem">AI chat, booking, payments, customer accounts and a dashboard, built around what your business actually needs.</p>
+  <div class="row"><a class="btn s" id="c1" href="#demos">Try the live demos</a><a class="btn" id="c2" href="#features">See all 175 features</a></div>
+  <div class="stats"><div><b>175</b><span>features to choose from</span></div><div><b>13</b><span>feature groups</span></div><div><b>1</b><span>reusable platform</span></div></div>
+  <div class="three">
+    <div class="g"><h3>Pick only what you need</h3><p>No business needs every feature. We choose the ones that fit yours.</p></div>
+    <div class="g"><h3>Built on a proven base</h3><p>A reusable platform means faster delivery and fewer surprises.</p></div>
+    <div class="g"><h3>A quote that fits</h3><p>Pricing follows the features you choose, so you never pay for extras.</p></div>
+  </div>
+</div></section>
+
+<section class="pg" id="pg-features"><div class="w">
+  <h2>Every feature, and what it does for you</h2>
+  <p class="ld">175 features in 13 groups. Open a group to see each feature in action and how it helps a business owner.</p>
+  <div class="srch"><input type="text" id="q" placeholder="Search features, e.g. booking, reviews, 3D" aria-label="Search features"></div>
+  <div id="flist"></div>
+  <p class="note hide" id="none">No feature matches that search.</p>
+</div></section>
+
+<section class="pg" id="pg-demos"><div class="w">
+  <h2>See it work before you decide</h2>
+  <p class="ld">Five of the things your website can do. Tap through them.</p>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" aria-selected="true" data-p="p1">AI assistant</button><button role="tab" aria-selected="false" data-p="p2">Online booking</button><button role="tab" aria-selected="false" data-p="p3">Before and after</button><button role="tab" aria-selected="false" data-p="p4">3D showroom</button><button role="tab" aria-selected="false" data-p="p5">Owner dashboard</button>
+  </div>
+  <div class="g">
+    <div class="pn on" id="p1">
+      <div id="log"><div class="m b">Hi, I'm the assistant for this business. Ask me anything.</div></div>
+      <div class="chips" id="qc"><button>Book an appointment</button><button>How much does it cost?</button><button>What are your hours?</button><button>Talk to a person</button></div>
+      <form class="in" id="cf"><input type="text" id="ci" placeholder="Type a message" aria-label="Message" autocomplete="off"><button>Send</button></form>
+      <p class="note">Sample answers. A real assistant answers from your own business information.</p>
+    </div>
+    <div class="pn" id="p2">
+      <h4>Choose a day</h4><div class="days" id="days"></div>
+      <h4>Choose a time</h4><div class="slots" id="slots"></div>
+      <input type="text" id="nm" placeholder="Your name" aria-label="Your name">
+      <button class="go" id="bk" disabled>Confirm booking</button><p id="ok" role="status"></p>
+      <p class="note">Real sites add confirmations, reminders, rescheduling and staff calendars.</p>
+    </div>
+    <div class="pn" id="p3">
+      <div class="ba" id="ba">
+        <div class="pp old"><b>WELCOME TO OUR WEBSITE</b><i style="width:90%"></i><i style="width:60%"></i><i style="width:80%"></i><span class="tag" style="right:10px">Old site</span></div>
+        <div class="pp new"><b>Book in under a minute.</b><i></i><i style="width:50%"></i><u></u><span class="tag" style="left:10px">New site</span></div>
+      </div>
+      <input type="range" id="rg" min="0" max="100" value="50" aria-label="Compare old and new site">
+      <p class="note">Works for project photos, repairs, renovations and results too.</p>
+    </div>
+    <div class="pn" id="p4">
+      <div class="stage"><div class="cube" id="cube"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+      <input type="range" id="rot" min="0" max="360" value="30" aria-label="Rotate the product">
+      <div class="chips" style="align-items:center"><button class="sw" style="background:#00f0ff" data-c="#00f0ff" aria-label="Cyan"></button><button class="sw" style="background:#8a2be2" data-c="#8a2be2" aria-label="Purple"></button><button class="sw" style="background:#ff7a3d" data-c="#ff7a3d" aria-label="Orange"></button><button class="sw" style="background:#e8e8e8" data-c="#e8e8e8" aria-label="Silver"></button><button data-z="80px">Small</button><button data-z="110px">Medium</button><button data-z="140px">Large</button></div>
+      <p class="note">Real versions show your own products, vehicles or rooms in 3D or AR.</p>
+    </div>
+    <div class="pn" id="p5">
+      <div class="tiles"><div class="tile"><b data-n="24">0</b><small>Bookings today</small></div><div class="tile"><b data-n="9">0</b><small>New leads</small></div><div class="tile"><b data-n="17">0</b><small>Orders</small></div><div class="tile"><b data-n="12">0</b><small>Unread messages</small></div></div>
+      <div class="bars" id="bars"></div>
+      <button class="btn" id="rf" style="width:auto">Refresh sample data</button>
+      <p class="note">Sample data. Your real dashboard shows bookings, orders, leads, tasks and revenue in one place.</p>
+    </div>
+  </div>
+</div></section>
+
+<section class="pg" id="pg-uses"><div class="w">
+  <h2>One platform, picked to fit your business</h2>
+  <p class="ld">The same foundation is customised for each business. Here is how the features might be combined.</p>
+  <div class="uses" id="uses"></div>
+</div></section>
+
+<section class="pg" id="pg-plan"><div class="w">
+  <h2>Plan your website</h2>
+  <p class="ld">Tap the groups you want and see how big the project is. You get a tailored quote after we talk. There is no fixed price list.</p>
+  <div class="cats" id="cats"></div>
+  <div class="g sum"><h3 id="sc">Nothing selected yet</h3><div class="meter" aria-hidden="true"><i></i><i></i><i></i></div><p id="sd">Pick at least one group to see the project size.</p><div class="row"><a class="btn s" id="em" href="#">Email my plan</a><a class="btn" href="https://www.facebook.com/share/1RTd4RM99L/?mibextid=wwXIfr" target="_blank" rel="noopener">Message on Facebook</a></div></div>
+</div></section>
+<div class="ft">Demo website designed by Succy Binitie. Not a real business.<br><a href="https://www.facebook.com/share/1RTd4RM99L/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook</a> &nbsp;|&nbsp; <a href="mailto:successbinitie@gmail.com">successbinitie@gmail.com</a></div>
+<dialog id="dlg"><h3>This is a demo website</h3><p>Everything you see here is sample content. The business name, chat replies, bookings and numbers are placeholders that show what your real website could do. Want a quick tour? An arrow will show you where to tap, and you can skip it any time.</p><div class="row" style="margin-top:0"><button class="btn s" id="ok2">Yes, show me around</button><button class="btn" id="no2">No thanks, I will explore</button></div></dialog>
+</main>
+
+<nav aria-label="Pages"><a href="#home">Home</a><a href="#features">Features</a><a href="#demos">Demos</a><a href="#uses">Uses</a><a href="#plan">Plan</a></nav>
+
+<div id="tour" hidden><div id="tr-ring"></div><svg id="tr-arr" viewBox="0 0 60 70" width="52" height="60" aria-hidden="true"><path d="M22 4h16v32h16L30 66 6 36h16z"/></svg><div id="tr-bub" role="dialog" aria-live="polite"><p id="tr-t"></p><div class="trb"><span id="tr-n"></span><button id="tr-skip">Skip tour</button><button id="tr-next" class="s">Next</button></div></div></div>
+<script>
+(()=>{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C=[
+['Website design and user experience','Makes a strong first impression and keeps visitors on the page.',`Premium modern website design|Builds instant trust so visitors take you seriously
+Fully responsive mobile design|Works on every phone, where most customers browse
+Desktop and tablet optimisation|Looks right on every screen size
+Custom landing pages|Turns ad and campaign clicks into enquiries
+Animated page transitions|Makes the site feel polished and memorable
+Interactive navigation menus|Helps visitors find what they need fast
+Dark and light mode|Comfortable viewing and a modern feel
+Custom typography and fonts|Gives your brand its own voice
+Advanced colour themes|Keeps the site on-brand everywhere
+3D animated backgrounds|Stands out from competitors' flat sites
+Multilingual website support|Reaches customers in their own language
+Accessibility features|Lets everyone use your site, widening your audience
+High-speed page loading optimisation|Fast pages keep visitors and help Google ranking
+Image and video galleries|Shows your work so it sells for you
+Custom website layouts|Designed around your business, not a template`],
+['Artificial intelligence','Answers, sells and follows up while you are busy or asleep.',`AI customer support assistant|Answers common questions 24/7 without extra staff
+AI-powered live chat|Replies instantly, even at night
+AI sales assistant|Guides visitors toward buying or booking
+AI product recommendation system|Suggests items customers are likely to buy
+AI booking assistant|Books appointments inside the conversation
+AI quotation assistant|Collects details and prepares quote requests
+AI FAQ assistant|Cuts repeated questions to your team
+Multilingual AI assistant|Serves customers in many languages
+AI product demonstration assistant|Explains and shows products on request
+AI-powered website search|Helps visitors find the right page or product
+AI lead qualification|Sorts serious buyers from time-wasters
+Automated AI customer follow-ups|Chases leads so none go cold
+AI business knowledge assistant|Answers from your own prices, hours and policies
+Personalised AI customer experience|Tailors replies to each customer
+AI-powered customer guidance|Walks customers step by step to the right choice`],
+['Customer communication','Keeps every conversation with customers and staff in one place.',`Built-in website messaging system|Customers message you without leaving the site
+Real-time customer live chat|Talk to buyers while they are still interested
+Business owner messaging dashboard|All customer messages in one inbox
+Customer conversation history|See past chats before you reply
+Customer relationship management (CRM)|Track every customer and lead in one place
+Automated email communication|Sends routine emails for you
+Real-time message notifications|Never miss a new enquiry
+Multiple staff accounts|Your team replies with their own logins
+Customer support ticket system|Keeps problems tracked until solved
+Human takeover of AI conversations|Step in the moment a chat needs a person
+Customer file and image sharing|Customers send photos and documents directly
+Customer enquiry forms|Capture leads with clear, simple forms
+Internal staff messaging|Your team talks inside the system, not scattered apps
+Message read receipts|Know when customers have seen your reply
+Customer contact management|Keeps names, numbers and emails organised`],
+['Online booking and appointments','Fills your calendar without phone tag.',`Online appointment booking|Customers book anytime without calling
+Real-time booking calendar|Prevents double bookings
+Automatic booking confirmations|Customers get proof instantly
+Appointment rescheduling|Customers change times themselves
+Appointment cancellation|Frees the slot for someone else
+Automatic appointment reminders|Reduces no-shows
+Staff availability management|Only offers times your staff can work
+Multiple service booking|Customers book several services at once
+Customer booking history|See what each customer booked before
+Booking management dashboard|Run every booking from one screen
+Waiting list management|Fills cancelled slots automatically
+Recurring appointment scheduling|Repeat customers book once, not every time`],
+['Payments and billing','Gets you paid faster, with less chasing.',`Online payment integration|Get paid directly on your website
+Deposit payment system|Secures bookings and cuts no-shows
+Full online checkout|Customers pay in a few taps
+Multiple payment methods|More ways to pay means fewer lost sales
+Automatic invoice generation|No manual invoicing
+Digital payment receipts|Instant proof of payment for customers
+Refund management|Handle refunds quickly and cleanly
+Subscription payment system|Steady recurring income from memberships
+Discount and coupon codes|Run promotions that bring buyers back
+Customer payment history|See who paid what and when
+Order payment tracking|Know which orders are paid or pending
+Automatic payment notifications|You and your customers are told instantly`],
+['E-commerce and online store','Sells your products around the clock.',`Online product catalogue|Shows everything you sell, always open
+Shopping cart|Lets customers buy several items together
+Product filtering system|Shoppers narrow their choices quickly
+Product comparison tool|Helps customers decide and buy
+Advanced product search|Finds the right product fast
+Inventory management|Stops you selling what you do not have
+Product variations and sizes|Sizes, colours and options in one listing
+Product image zoom|Shows detail, so fewer returns
+Customer wishlist|Saves items for a later purchase
+Order tracking|Cuts "where is my order" messages
+Customer order history|Makes reordering easy
+Order status notifications|Keeps customers updated automatically
+Product review system|Social proof that lifts sales
+Digital product sales|Sell downloads and courses with no shipping`],
+['Interactive and advanced visuals','Lets customers see and try before they buy.',`Interactive 3D product showroom|Customers explore products as if in person
+360-degree product viewing|Shows every angle before buying
+Product customisation tool|Customers design exactly what they want
+Interactive product demonstrations|Shows how it works, not just photos
+Augmented reality (AR) product previews|Customers see items in their own space
+Interactive Google Maps integration|Helps customers find and reach you
+Business service-area maps|Shows clearly where you work
+Before-and-after image slider|Proves your results visually
+Price and cost calculators|Gives instant estimates and captures leads
+Custom product builders|Customers assemble their own package
+Interactive project galleries|Showcases your best work in detail
+Virtual business tours|Lets people look around before visiting
+Personalised product visualisation|Shows the product with the customer's choices
+Product comparison experiences|Side-by-side views that help buyers choose
+Real-time product availability display|Shows what is in stock right now
+Interactive animations and effects|Makes the experience memorable`],
+['Customer accounts and private portals','Gives customers their own space, so you answer fewer questions.',`Customer account registration|Builds your customer list
+Secure customer login|Keeps customer data protected
+Personal customer dashboard|Customers manage everything themselves
+Customer profile management|Customers keep their own details up to date
+Saved customer addresses|Faster checkout and service visits
+Booking history|Customers rebook in one tap
+Order history|Customers reorder easily
+Invoice downloads|Customers get documents without asking you
+Customer document uploads|Receive files securely, no email chains
+Private customer messaging|Secure one-to-one conversations
+Project progress tracking|Customers see updates, so fewer status calls
+Customer loyalty points|Rewards repeat business
+Membership accounts|Recurring members and exclusive content`],
+['Business owner dashboard','Gives you one view of the whole business.',`Central business management dashboard|Run the whole business from one screen
+Customer relationship management|Know every customer's full story
+Lead management system|Track enquiries until they close
+Staff accounts and permissions|Control who can see and do what
+Booking management|Approve, move and track appointments
+Order management|Process orders from start to finish
+Sales and revenue analytics|See what earns money
+Customer activity tracking|Learn what customers actually do
+Staff task management|Assign work and follow it up
+Business communication management|All messages organised in one place
+Performance reports|Clear numbers for better decisions
+Inventory management dashboard|Watch stock levels at a glance
+Business activity overview|Today's activity summed up in seconds`],
+['Marketing, SEO and customer acquisition','Brings in new customers and proves you can be trusted.',`Search engine optimisation (SEO)|Brings free visitors from Google
+Local SEO optimisation|Gets you found by people nearby
+Google Business Profile integration|Connects your site with your Maps listing
+Online review integrations|Displays real reviews that build trust
+Automated review request system|Collects more five-star reviews
+Email marketing integration|Keeps customers coming back
+Newsletter subscriptions|Builds an audience you own
+Promotional pop-up system|Promotes offers at the right moment
+Referral and affiliate programmes|Customers and partners bring you new customers
+Automated marketing campaigns|Marketing that runs without you
+Social media integration|Connects your site and social pages
+Custom advertising landing pages|Turns ad spend into enquiries
+Conversion tracking|Shows which marketing really works
+Website visitor analytics|See who visits and what they do`],
+['Automation and business workflows','Handles repetitive work so you save hours every week.',`Automatic booking reminders|Fewer missed appointments
+Automated customer follow-ups|Follows up so you do not have to
+Abandoned shopping cart reminders|Wins back almost-lost sales
+Automatic order confirmations|Customers feel sure immediately
+Automatic invoice delivery|Invoices send themselves
+Staff notification automation|The right person is alerted right away
+Automatic lead assignment|New leads go to the right team member
+Customer onboarding automation|New customers start smoothly
+Automatic review requests|Asks happy customers at the right time
+Appointment update notifications|Everyone knows when plans change
+Custom business workflow automation|Automates your own repeated tasks
+Third-party application integrations|Connects the tools you already use
+Automated customer status updates|Fewer "any update?" messages
+Scheduled business notifications|Timed alerts for you and your customers`],
+['Security, privacy and infrastructure','Protects your business and your customers.',`SSL/HTTPS website security|Shows the padlock and protects data
+Secure user authentication|Only real users get in
+Two-factor authentication|Extra protection for important accounts
+Role-based access permissions|Staff see only what they need
+Database security|Keeps business and customer data safe
+Automatic database backups|Recover quickly if anything goes wrong
+Spam and bot protection|Keeps fake enquiries out
+Secure payment processing|Customers pay with confidence
+Customer privacy controls|Respects customers' data choices
+Business activity logs|See who did what and when
+Account recovery system|Locked-out users get back in safely
+Website performance monitoring|Problems are spotted before customers notice
+Secure API key management|Protects connections to other services`],
+['Advanced and custom web applications','Features that set you apart from competitors.',`Personalised website experiences|Each visitor sees what suits them
+Interactive AI business representatives|A virtual team member who greets and helps
+AI-powered product visualisation|Shows customers how products will look
+Virtual shopping assistant|Guides shoppers like a store assistant
+Real-time business dashboards|Live numbers as things happen
+Live project monitoring|Follow jobs as they progress
+Interactive business simulators|Lets customers try options and see outcomes
+Voice-controlled AI assistants|Hands-free help by speaking
+Multi-location business management|Run every branch from one system`]];
+C.forEach(c=>c[3]=c[2].split('\n').map(l=>l.split('|')));
+/* feature list */
+let n=0;const F=$('#flist');
+C.forEach((c,ci)=>{const d=document.createElement('details');d.dataset.s=n;d.addEventListener('toggle',()=>build(d,ci));d.innerHTML=`<summary><div><strong>${c[0]}</strong><small>${c[1]}</small></div><em>${c[3].length} features</em></summary><ul>${c[3].map(f=>`<li><div class="viz"></div><b><i>${++n}</i>${f[0]}</b><span>${f[1]}</span></li>`).join('')}</ul>`;F.appendChild(d)});
+$('#q').oninput=e=>{const q=e.target.value.toLowerCase().trim();let any=0;$$('#flist details').forEach(d=>{let m=0;d.querySelectorAll('li').forEach(li=>{const h=!q||li.textContent.toLowerCase().includes(q);li.classList.toggle('hide',!h);if(h)m++});d.classList.toggle('hide',!m);d.open=!!q&&m>0;any+=m});$('#none').classList.toggle('hide',!!any)};
+
+const S={
+chat:'<rect x="20" y="10" width="92" height="26" rx="13"/><rect class="fl o5" x="88" y="46" width="92" height="26" rx="13"/><circle class="fl bk" cx="40" cy="23" r="3"/><circle class="fl bk d2" cx="52" cy="23" r="3"/><circle class="fl bk d3" cx="64" cy="23" r="3"/>',
+cal:'<rect x="50" y="10" width="100" height="72" rx="8"/><path d="M50 28h100M72 5v9M128 5v9"/><g class="fl o5"><circle cx="70" cy="44" r="3"/><circle cx="90" cy="44" r="3"/><circle cx="110" cy="44" r="3"/><circle cx="130" cy="44" r="3"/><circle cx="70" cy="64" r="3"/><circle cx="90" cy="64" r="3"/></g><circle class="pu" cx="112" cy="64" r="9"/><path class="fa" d="M107 64l4 4 8-9"/>',
+pay:'<rect x="40" y="16" width="120" height="68" rx="10"/><path d="M40 36h120"/><rect class="fl o5" x="52" y="54" width="34" height="8" rx="3"/><circle class="pu" cx="138" cy="62" r="11"/><path class="fa" d="M132 62l4 4 9-10"/>',
+cart:'<path d="M46 18h16l10 40h58l8-30H66"/><circle cx="82" cy="72" r="5"/><circle cx="122" cy="72" r="5"/><rect class="fl dn" x="88" y="8" width="16" height="16" rx="3"/>',
+cube:'<g class="sp"><path d="M100 12l36 20v28l-36 20-36-20V32z"/><path d="M64 32l36 20 36-20M100 52v28"/></g>',
+slider:'<rect x="30" y="12" width="140" height="66" rx="8"/><rect class="fl o5" x="30" y="12" width="68" height="66" rx="8"/><g class="sl" style="--sx:36px"><path d="M100 8v74"/><circle class="fl" cx="100" cy="45" r="7"/></g>',
+map:'<path class="o5" d="M20 30h160M20 60h160M60 8v76M130 8v76"/><path d="M100 14c-12 0-20 9-20 19 0 14 20 32 20 32s20-18 20-32c0-10-8-19-20-19z"/><circle class="fl" cx="100" cy="33" r="6"/><circle class="pu" cx="100" cy="72" r="9"/>',
+chart:'<path class="o5" d="M26 82h148"/><rect class="fl gr" x="38" y="48" width="16" height="34" rx="3"/><rect class="fl gr d2" x="66" y="32" width="16" height="50" rx="3"/><rect class="fl gr d3" x="94" y="40" width="16" height="42" rx="3"/><rect class="fl gr d2" x="122" y="18" width="16" height="64" rx="3"/><rect class="fl gr" x="150" y="30" width="16" height="52" rx="3"/>',
+bell:'<g class="sw" style="transform-origin:100px 8px"><path d="M76 62V42a24 24 0 0148 0v20l8 8H68z"/><path d="M92 76a8 8 0 0016 0"/></g><circle class="fl pu" cx="128" cy="22" r="6"/>',
+shield:'<path d="M100 6l40 14v26c0 20-16 30-40 38-24-8-40-18-40-38V20z"/><path class="dsh" d="M82 44l12 12 26-26"/>',
+key:'<circle class="pu" cx="64" cy="45" r="16"/><path d="M80 45h70M128 45v12M142 45v10"/><rect class="o5" x="40" y="72" width="22" height="12" rx="3"/><rect class="o5" x="70" y="72" width="22" height="12" rx="3"/><rect class="o5" x="100" y="72" width="22" height="12" rx="3"/>',
+flow:'<rect x="12" y="30" width="38" height="30" rx="8"/><rect x="81" y="30" width="38" height="30" rx="8"/><rect x="150" y="30" width="38" height="30" rx="8"/><path class="dsh" d="M50 45h31M119 45h31"/><circle class="fl pu" cx="100" cy="45" r="5"/>',
+star:'<text class="bk" x="100" y="60" text-anchor="middle" font-size="36" fill="currentColor" stroke="none" letter-spacing="3">★★★★★</text>',
+mail:'<rect x="48" y="20" width="104" height="58" rx="8"/><path d="M48 28l52 28 52-28"/><circle class="fl pu" cx="152" cy="20" r="7"/>',
+user:'<circle cx="100" cy="28" r="14"/><path d="M68 80c0-18 14-26 32-26s32 8 32 26"/><circle class="fl pu" cx="136" cy="22" r="6"/>',
+list:'<g class="o5"><rect x="40" y="10" width="120" height="20" rx="5"/><rect x="40" y="36" width="120" height="20" rx="5"/><rect x="40" y="62" width="120" height="20" rx="5"/></g><path class="fa" d="M50 20l4 4 8-9"/><path class="fa d2" d="M50 46l4 4 8-9"/><path class="fa d3" d="M50 72l4 4 8-9"/>',
+globe:'<circle cx="100" cy="45" r="36"/><path d="M64 45h72M100 9c-26 24-26 48 0 72"/><ellipse class="sp" cx="100" cy="45" rx="16" ry="36"/>',
+search:'<path class="o5" d="M96 28h64M96 44h54M96 60h60"/><g class="sl" style="--sx:20px"><circle cx="60" cy="40" r="16"/><path d="M72 52l14 14"/></g>',
+toggle:'<rect x="60" y="28" width="80" height="34" rx="17"/><circle class="fl sl" cx="77" cy="45" r="11" style="--sx:46px"/>',
+type:'<text x="100" y="56" text-anchor="middle" font-size="42" font-weight="700" fill="currentColor" stroke="none">Aa</text><circle class="fl bk" cx="56" cy="76" r="5"/><circle class="fl bk d2" cx="100" cy="76" r="5"/><circle class="fl bk d3" cx="144" cy="76" r="5"/>',
+gauge:'<path d="M50 72a50 50 0 01100 0"/><g class="sw" style="transform-origin:100px 72px"><path d="M100 72l26-30"/></g><circle class="fl" cx="100" cy="72" r="5"/>',
+gallery:'<rect x="20" y="20" width="48" height="50" rx="6"/><rect x="76" y="20" width="48" height="50" rx="6"/><rect x="132" y="20" width="48" height="50" rx="6"/><rect class="fl o5 sl" style="--sx:112px" x="20" y="20" width="48" height="50" rx="6"/>',
+phone:'<rect x="72" y="6" width="56" height="80" rx="10"/><path class="o5" d="M82 24h36M82 36h26M82 48h32"/><rect class="fl gr" x="82" y="60" width="36" height="14" rx="4"/>',
+ai:'<rect x="62" y="28" width="76" height="46" rx="12"/><circle class="fl bk" cx="84" cy="48" r="5"/><circle class="fl bk d2" cx="116" cy="48" r="5"/><path d="M100 28V16M86 62h28"/><circle class="fl pu" cx="100" cy="12" r="4"/><path class="o5" d="M30 20l8 8M170 20l-8 8M30 76l8-8M170 76l-8-8"/>',
+box:'<path d="M60 28l40-18 40 18v34l-40 18-40-18z"/><path d="M60 28l40 18 40-18M100 46v34"/><path class="dsh" d="M14 86h172"/>',
+tag:'<rect x="40" y="22" width="120" height="46" rx="8"/><path class="dsh" d="M120 22v46"/><text x="80" y="55" text-anchor="middle" font-size="24" font-weight="700" fill="currentColor" stroke="none">%</text><circle class="pu" cx="140" cy="45" r="9"/>',
+heart:'<path class="pu" d="M100 76S54 50 54 30a23 23 0 0146-4 23 23 0 0146 4c0 20-46 46-46 46z"/><path d="M100 70S62 48 62 32a17 17 0 0138-3 17 17 0 0138 3c0 16-38 38-38 38z"/>',
+db:'<ellipse cx="100" cy="20" rx="40" ry="12"/><path d="M60 20v46c0 7 18 12 40 12s40-5 40-12V20M60 43c0 7 18 12 40 12s40-5 40-12"/><path class="dsh" d="M160 28a30 30 0 010 40"/>',
+mic:'<rect x="86" y="8" width="28" height="44" rx="14"/><path d="M72 40a28 28 0 0056 0M100 68v14"/><path class="bk" d="M50 28v18M38 22v30"/><path class="bk d2" d="M150 28v18M162 22v30"/>',
+coin:'<ellipse cx="100" cy="68" rx="32" ry="10"/><ellipse cx="100" cy="54" rx="32" ry="10"/><ellipse class="dn" cx="100" cy="38" rx="32" ry="10"/>',
+doc:'<rect x="62" y="6" width="76" height="78" rx="8"/><path class="o5" d="M76 24h48M76 38h48M76 52h28"/><circle class="pu" cx="122" cy="66" r="10"/><path class="fa" d="M117 66l4 4 8-9"/>',
+branch:'<circle class="fl" cx="100" cy="20" r="8"/><circle class="fl" cx="40" cy="68" r="8"/><circle class="fl" cx="160" cy="68" r="8"/><path class="dsh" d="M94 27L46 62M106 27l48 35M48 68h104"/><circle class="pu" cx="100" cy="20" r="8"/>',
+play:'<rect x="40" y="12" width="120" height="66" rx="10"/><path class="fl pu" d="M92 31l28 14-28 14z"/>'};
+const DEF=['phone','ai','chat','cal','pay','cart','cube','user','chart','globe','flow','shield','ai'];
+const MAP=[[/voice/,'mic'],[/chat|messag|conversation|receipt|enquir/,'chat'],[/\bai\b|ai-|assistant|representative|simulator|personalis/,'ai'],[/notif|remind|alert/,'bell'],[/appointment|booking|reschedul|waiting|recurring|calendar|availab/,'cal'],[/invoice|document|report|upload|download/,'doc'],[/discount|coupon|promo|price|calculator/,'tag'],[/wishlist/,'heart'],[/loyalty|points|membership|referral|affiliate/,'coin'],[/payment|checkout|deposit|refund|subscription|billing/,'pay'],[/inventory|order|tracking|stock|variation/,'box'],[/cart|catalogue|product|shopping|e-commerce/,'cart'],[/before-and-after|comparison|compare/,'slider'],[/multi-location/,'branch'],[/map|location|service-area/,'map'],[/3d|360|augmented|showroom|visuali|builder|customis|tour/,'cube'],[/review|rating/,'star'],[/two-factor|authentication|login|recovery|api key/,'key'],[/database|backup|log/,'db'],[/secur|ssl|privacy|spam|permission|access/,'shield'],[/analytic|revenue|dashboard|performance|conversion|visitor|overview|monitor/,'chart'],[/email|newsletter|campaign|follow/,'mail'],[/task|ticket|workflow|onboarding|status|progress|form/,'list'],[/automat|integration|assign/,'flow'],[/multilingual|language|seo|social|profile integration|advertising|landing/,'globe'],[/search|filter/,'search'],[/dark and light/,'toggle'],[/typograph|font|colour/,'type'],[/speed|loading/,'gauge'],[/gallery|galleries|image|video|photo|zoom/,'gallery'],[/demonstration|animation|effects/,'play'],[/account|profile|registration|contact|relationship|lead|staff|role|address/,'user'],[/mobile|responsive|desktop|tablet|accessib|navigation|menu|layout|page|design|transition/,'phone']];
+function build(d,ci){if(!d.open||d.built)return;d.built=1;const s=+d.dataset.s;d.querySelectorAll('li').forEach((li,k)=>{const nm=C[ci][3][k][0].toLowerCase(),m=MAP.find(r=>r[0].test(nm)),v=li.firstElementChild;v.style.setProperty('--h',175+((s+k)*37)%115);v.innerHTML='<svg viewBox="0 0 200 90" aria-hidden="true">'+S[m?m[1]:DEF[ci]]+'</svg>'})}
+/* uses */
+[['Restaurants','AI assistant|Online reservations|Digital menus|Payments'],['Car dealerships','3D showroom|Vehicle inventory|Comparisons|Test-drive bookings'],['Hotels','Room reservations|Virtual tours|Online payments'],['Construction companies','Quotation calculators|Project galleries|Customer portals'],['Salons','Appointment booking|Staff availability|Loyalty programmes'],['Car washes','Service selection|Online booking|Payments'],['Retail stores','E-commerce|Inventory|AI shopping assistants']].forEach(u=>{const d=document.createElement('div');d.className='g use';d.innerHTML=`<h3>${u[0]}</h3><div class="chips">${u[1].split('|').map(x=>`<span>${x}</span>`).join('')}</div>`;$('#uses').appendChild(d)});
+$('#uses').insertAdjacentHTML('beforeend','<div class="g use"><h3>Your business</h3><p class="note" style="margin-top:8px">Tell us what you do and we pick the right mix from all 175 features.</p></div>');
+/* routing + transition */
+const R=['home','features','demos','uses','plan'];let cur=null,busy=false,lx=innerWidth/2,ly=innerHeight;
+addEventListener('pointerdown',e=>{lx=e.clientX;ly=e.clientY});
+function show(r){$$('.pg').forEach(p=>{const on=p.id==='pg-'+r;p.classList.toggle('on',on);if(on)[...p.firstElementChild.children].forEach((c,i)=>c.style.setProperty('--i',i))});$$('nav a').forEach(a=>a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+r)||0);$$('nav a').forEach(a=>{a.getAttribute('href')==='#'+r?a.setAttribute('aria-current','page'):a.removeAttribute('aria-current')});scrollTo(0,0);if(r==='demos'&&!$('.tile b').dataset.d)dash()}
+function route(){let r=location.hash.replace('#','');if(!R.includes(r))r='home';if(r===cur)return;
+ if(cur===null||reduce){cur=r;show(r);return}
+ cur=r;const w=$('#wipe'),o=`circle(0 at ${lx}px ${ly}px)`,f=`circle(150vmax at ${lx}px ${ly}px)`;
+ const a=w.animate([{clipPath:o},{clipPath:f}],{duration:420,easing:'cubic-bezier(.7,0,.3,1)',fill:'forwards'});
+ a.onfinish=()=>{show(r);w.animate([{clipPath:f},{clipPath:o}],{duration:480,easing:'cubic-bezier(.7,0,.3,1)',fill:'forwards'})}}
+addEventListener('hashchange',route);
+/* theme + language */
+const T={en:['A website that works as hard as your business does.','AI chat, booking, payments, customer accounts and a dashboard, built around what your business actually needs.','Try the live demos','See all 175 features'],fr:['Un site web qui travaille aussi dur que votre entreprise.','Chat IA, réservation, paiements, comptes clients et tableau de bord, selon les besoins réels de votre entreprise.','Essayer les démos','Voir les 175 fonctionnalités'],es:['Un sitio web que trabaja tan duro como tu negocio.','Chat con IA, reservas, pagos, cuentas de clientes y panel de control, según lo que tu negocio necesita.','Probar las demos','Ver las 175 funciones']};
+$('#lang').onchange=e=>{const t=T[e.target.value];document.documentElement.lang=e.target.value;['#h','#s','#c1','#c2'].forEach((k,i)=>$(k).textContent=t[i])};
+let cols=['0,240,255','138,43,226'];
+$('#th').onclick=e=>{const d=document.documentElement,l=d.dataset.theme==='dark';d.dataset.theme=l?'light':'dark';e.target.textContent=l?'Dark':'Light';cols=l?['0,127,138','106,31,184']:['0,240,255','138,43,226']};
+/* demos */
+$$('#tabs button').forEach(b=>b.onclick=()=>{$$('#tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$$('.pn').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p));if(b.dataset.p==='p5')dash()});
+const log=$('#log'),say=(t,c)=>{const d=document.createElement('div');d.className='m '+c;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight};
+function ask(t){if(!t.trim())return;say(t,'u');const l=t.toLowerCase();let r;
+ if(/book|appoint|reserv/.test(l))r='Happy to help. Which day suits you? You can also try the Online booking tab.';
+ else if(/price|cost|quote|how much/.test(l))r='The price depends on what you need. I can collect a few details and pass a quote request to the team.';
+ else if(/hour|open|close/.test(l))r='We are open Monday to Saturday, 9am to 6pm. (Sample answer.)';
+ else if(/human|person|agent|staff/.test(l))r='Connecting you to a team member now. On a real site they see this whole chat and take over.';
+ else r="Good question. On a live site I answer from this business's own information. Would you like to book, get a quote, or talk to a person?";
+ setTimeout(()=>say(r,'b'),550)}
+$('#cf').onsubmit=e=>{e.preventDefault();const i=$('#ci');ask(i.value);i.value=''};
+$$('#qc button').forEach(b=>b.onclick=()=>ask(b.textContent));
+let day=null,slot=null;const chk=()=>$('#bk').disabled=!(day&&slot&&$('#nm').value.trim());
+const nm=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+for(let i=1;i<=7;i++){const d=new Date();d.setDate(d.getDate()+i);const b=document.createElement('button');b.className='day';b.textContent=nm[d.getDay()]+' '+d.getDate();b.onclick=()=>{day=b.textContent;$$('.day').forEach(x=>x.classList.toggle('sel',x===b));mk(i);chk()};$('#days').appendChild(b)}
+function mk(s){const S=$('#slots');S.innerHTML='';slot=null;['9:00','10:30','12:00','13:30','15:00','16:30'].forEach((t,j)=>{const b=document.createElement('button');b.className='slot';b.textContent=t;if((s*3+j)%5===0)b.disabled=true;b.onclick=()=>{slot=t;$$('.slot').forEach(x=>x.classList.toggle('sel',x===b));chk()};S.appendChild(b)})}
+$('#nm').oninput=chk;
+$('#bk').onclick=()=>$('#ok').textContent=`Booked: ${day} at ${slot} for ${$('#nm').value.trim()}. A confirmation and reminder would be sent automatically.`;
+$('#rg').oninput=e=>$('#ba').style.setProperty('--p',e.target.value+'%');
+const cube=$('#cube');$('#rot').oninput=e=>cube.style.setProperty('--ry',e.target.value+'deg');
+$$('[data-c]').forEach(b=>b.onclick=()=>document.documentElement.style.setProperty('--cc',b.dataset.c));
+$$('[data-z]').forEach(b=>b.onclick=()=>cube.style.setProperty('--sz',b.dataset.z));
+function dash(){$$('.tile b').forEach(el=>{el.dataset.d=1;const t=+el.dataset.n;let c=0;const s=setInterval(()=>{el.textContent=Math.round(t*++c/20);if(c>=20)clearInterval(s)},30)});const B=$('#bars');B.innerHTML='';for(let i=0;i<7;i++){const e=document.createElement('i');e.style.height='8%';B.appendChild(e);setTimeout(()=>e.style.height=(25+Math.random()*70)+'%',60)}}
+$('#rf').onclick=dash;
+/* planner */
+const sel={};
+C.forEach((c,i)=>{const b=document.createElement('button');b.className='cat';b.setAttribute('aria-pressed','false');b.innerHTML=`<strong>${c[0]}<em>${c[3].length} features</em></strong><span>${c[3].slice(0,3).map(f=>f[0]).join(', ')}</span>`;b.onclick=()=>{sel[i]=!sel[i];b.setAttribute('aria-pressed',!!sel[i]);up()};$('#cats').appendChild(b)});
+function up(){const k=Object.keys(sel).filter(x=>sel[x]),m=k.length,lv=m?m<=3?1:m<=7?2:3:0,
+ L=['Nothing selected yet','Focused website','Growing website','Full business platform'],
+ D=['Pick at least one group to see the project size.','A lean build around a few key features. Quick to launch, and you can add more later.','A fuller build with several connected systems, quoted to fit the features you pick.','A complete platform for the whole business, built in stages and quoted to fit.'];
+ $('#sc').textContent=L[lv];$('#sd').textContent=D[lv];$$('.meter i').forEach((e,i)=>e.classList.toggle('on',i<lv));
+ const tot=k.reduce((a,x)=>a+C[x][3].length,0);
+ $('#em').href='mailto:successbinitie@gmail.com?subject='+encodeURIComponent('Website plan request')+'&body='+encodeURIComponent('Hi, I would like a website with these feature groups: '+(m?k.map(x=>C[x][0]).join(', ')+` (up to ${tot} features)`:'not chosen yet, I need advice')+'. Can I get a tailored quote?')}
+up();
+/* animated background: depth particles + reactive grid */
+const cv=$('#fx'),x=cv.getContext('2d');let W,H,P=[],pt={x:-999,y:-999,on:0},sy=0;
+function size(){const r=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;cv.width=W*r;cv.height=H*r;x.setTransform(r,0,0,r,0,0);const c=Math.round(Math.min(70,Math.max(30,W*H/17000)));P=[];for(let i=0;i<c;i++){const z=.35+Math.random()*.65;P.push({x:Math.random()*W,y:Math.random()*H,z,vx:(Math.random()-.5)*.4*z,vy:(Math.random()-.5)*.4*z,c:i%3?0:1})}}
+const mv=e=>{pt.x=e.clientX;pt.y=e.clientY;pt.on=1};addEventListener('pointermove',mv,{passive:true});addEventListener('pointerdown',mv,{passive:true});addEventListener('scroll',()=>sy=scrollY,{passive:true});addEventListener('resize',size);
+function frame(){x.clearRect(0,0,W,H);const G=72,off=(sy*.2)%G;x.lineWidth=1;
+ for(let a=0;a<=W+G;a+=G){x.strokeStyle=`rgba(${cols[0]},${.035+(pt.on?Math.max(0,1-Math.abs(a-pt.x)/200)*.11:0)})`;x.beginPath();x.moveTo(a,0);x.lineTo(a,H);x.stroke()}
+ for(let b=-G;b<=H+G;b+=G){const y=b+off;x.strokeStyle=`rgba(${cols[1]},${.035+(pt.on?Math.max(0,1-Math.abs(y-pt.y)/200)*.11:0)})`;x.beginPath();x.moveTo(0,y);x.lineTo(W,y);x.stroke()}
+ P.forEach((p,i)=>{if(!reduce){p.x+=p.vx;p.y+=p.vy;const dx=p.x-pt.x,dy=p.y-pt.y,d=Math.hypot(dx,dy);if(d<130&&d>0){p.x+=dx/d*1.2;p.y+=dy/d*1.2}if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1}
+  const py=(p.y-sy*p.z*.35)%H,yy=py<0?py+H:py;p.dy=yy;
+  for(let j=i+1;j<P.length;j++){const q=P[j],ax=p.x-q.x,ay=yy-(q.dy??q.y),dd=ax*ax+ay*ay;if(dd<13000){x.strokeStyle=`rgba(${cols[p.c]},${.18*(1-dd/13000)*p.z})`;x.beginPath();x.moveTo(p.x,yy);x.lineTo(q.x,q.dy??q.y);x.stroke()}}
+  x.fillStyle=`rgba(${cols[p.c]},${.5+p.z*.45})`;x.shadowColor=`rgba(${cols[p.c]},1)`;x.shadowBlur=p.z*10;x.beginPath();x.arc(p.x,yy,p.z*2.1,0,6.2832);x.fill();x.shadowBlur=0});
+ if(!reduce)requestAnimationFrame(frame)}
+size();frame();
+route();
+const STEPS=[['#th','Switch between dark and light mode here.'],['nav a[href="#features"]','Tap Features to see all 175 features, each with a moving picture of what it does.'],['nav a[href="#demos"]','Tap Demos to try a live chat, booking and 3D showroom.'],['nav a[href="#uses"]','Tap Uses to see how it fits different kinds of business.'],['nav a[href="#plan"]','Tap Plan to choose your features and send your request.']];
+let ti=0,tk=0,th=null;
+function tpos(){const el=$(STEPS[ti][0]),r=el.getBoundingClientRect(),ring=$('#tr-ring'),ar=$('#tr-arr'),b=$('#tr-bub'),dn=r.top>innerHeight/2;
+ ring.style.left=r.left-6+'px';ring.style.top=r.top-6+'px';ring.style.width=r.width+12+'px';ring.style.height=r.height+12+'px';ring.style.borderRadius=getComputedStyle(el).borderRadius;
+ const at=dn?r.top-6-62:r.bottom+10;ar.style.left=r.left+r.width/2-26+'px';ar.style.top=at+'px';ar.classList.toggle('up',!dn);
+ const bw=b.offsetWidth,bh=b.offsetHeight;b.style.left=Math.max(10,Math.min(innerWidth-bw-10,r.left+r.width/2-bw/2))+'px';b.style.top=Math.max(8,dn?at-bh-8:at+62+8)+'px'}
+function tshow(){const el=$(STEPS[ti][0]);$('#tr-t').textContent=STEPS[ti][1];$('#tr-n').textContent=(ti+1)+' of '+STEPS.length;$('#tr-next').textContent=ti===STEPS.length-1?'Done':'Next';
+ if(th)th.el.removeEventListener('click',th.f);const k=++tk,f=()=>setTimeout(()=>{if(k===tk)tnext()},400);th={el,f};el.addEventListener('click',f,{once:true});tpos()}
+function tnext(){if(++ti>=STEPS.length)return tend();tshow()}
+function tend(){$('#tour').hidden=true;if(th)th.el.removeEventListener('click',th.f);th=null;tk++;removeEventListener('resize',tpos);removeEventListener('keydown',tkey)}
+function tkey(e){if(e.key==='Escape')tend()}
+function tour(){ti=0;$('#tour').hidden=false;$('#tr-ring').style.transition='none';tshow();requestAnimationFrame(()=>requestAnimationFrame(()=>$('#tr-ring').style.transition=''));addEventListener('resize',tpos);addEventListener('keydown',tkey)}
+$('#tr-next').onclick=tnext;$('#tr-skip').onclick=tend;
+const dlg=$('#dlg');if(dlg.showModal){dlg.showModal();$('#ok2').onclick=()=>{dlg.close();setTimeout(tour,350)};$('#no2').onclick=()=>dlg.close()}
+})();
+</script>
+</body>
+</html>
